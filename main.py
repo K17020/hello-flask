@@ -20,24 +20,6 @@ form = """
 
 """
 
-time_form = """
-    <style>
-        .error {{ color: red; }}
-    </style
-    <h1>Validate Time</h1>
-    <form method='POST'>
-        <label>Hours (24-hour format)
-            <input name="hours" type="text" value="{hours}/>
-        </label>
-        <p class="error">{hours_error}</p>
-        <label>Minutes
-            <input name="Minutes" type="text" value="{minutes}/>
-        </label>
-        <p class="error">{minutes_error}</p>
-        <input type="submit" value="validate"/>
-    </form>
-"""
-
 @app.route("/")
 def index():
     return form
@@ -54,11 +36,11 @@ time_form = """
     <h1>Validate Time</h1>
     <form method='POST'>
         <label>Hours (24-hour format)
-            <input name="hours" type="text" value="{hours}/>
+            <input type='text' name='hours' value='{hours}'/>
         </label>
         <p class="error">{hours_error}</p>
         <label>Minutes
-            <input name="Minutes" type="text" value="{minutes}/>
+            <input type='text'name='minutes' value='{minutes}'/>
         </label>
         <p class="error">{minutes_error}</p>
         <input type="submit" value="validate"/>
@@ -67,5 +49,36 @@ time_form = """
 @app.route('/validate-time')
 def display_time_form():
     return time_form.format(hours='',hours_error='', minutes='',minutes_error='')
+
+def is_initger(num);
+    try:
+        int(num)
+        return True
+    except ValueError:
+        return False
+
+@app.route('/validate-time', methods=['POST'])
+def validate_time():
+
+    hours = request.form['hours']
+    minutes = request.form['minutes']
+
+    if not is_integer(hours):
+        hours_error = 'Not a valid integer'
+    else:
+        hours = int(hours)
+        if hours > 23 or hours < 0:
+            hours_error = 'hours value out of range (0-23)'
+
+    if not is_integer(minutes):
+        minutes_error = 'Not a valid integer'
+    else:
+        minutes = int(minutes)
+            minutes_error = 'minutes value out of range (0-59)'
+    
+    if not minutes_error and not hours_error:
+        # success messsage
+    else:
+        return time_form.format()
 
 app.run()

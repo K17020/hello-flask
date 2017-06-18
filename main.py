@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -45,11 +45,11 @@ time_form = """
     """
 
 @app.route('/validate-time')
+#displays the hours and minutes on screen
 def display_time_form():
-    return time_form.format(hours='', hours_error='',
-        minutes='', minutes_error='')
+    return time_form.format(hours='', hours_error='', minutes='', minutes_error='')
 
-
+#checks to see if the hour/minutes are integers
 def is_integer(num):
     try:
         int(num)
@@ -58,6 +58,8 @@ def is_integer(num):
         return False
 
 @app.route('/validate-time', methods=['POST'])
+#chcecks to see if the time entered are within range 
+
 def validate_time():
 
     hours = request.form['hours']
@@ -85,12 +87,15 @@ def validate_time():
             minutes = ''
 
     if not minutes_error and not hours_error:
-        return "Success!"
+        time = str(hours) + ':' + str(minutes)
+        return redirect('/valid-time?time={0}'.format(time))
     else:
-        return time_form.format(hours_error=hours_error,
-            minutes_error=minutes_error,
-            hours=hours,
-            minutes=minutes)
+        return time_form.format(hours_error=hours_error, minutes_error=minutes_error, hours=hours, minutes=minutes)
+
+@app.route('/valid-time')
+def valid_time():
+    time = request.args.get('time')
+    return '<h1>You submitting {0}. Thanks for submitting a valid time!</h1>'.format(time)
 
 
 app.run()

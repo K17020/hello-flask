@@ -64,5 +64,8 @@ time_form = """
         <input type="submit" value="validate"/>
     </form>
 """
+@app.route('/validate-time')
+def display_time_form():
+    return time_form.format(hours='',hours_error='', minutes='',minutes_error='')
 
 app.run()

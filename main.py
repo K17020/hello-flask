@@ -3,8 +3,12 @@ import cgi
 import os
 import jinja2
 
+# this is looking for a folder named tempates in the given path
 template_dir = os.path.join(os.path.dirname(__file__),
     'templates')
+
+# this loads files from the dir templates into a jinja2 template
+#autoescape provides protection from unwanted html insert
 jinja_env = jinja2.Environment(
     loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
 
@@ -12,7 +16,7 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 
 
-
+# this directs jinja templates to the html files
 @app.route("/")
 def index():
     template = jinja_env.get_template('hello_form.html')
@@ -24,28 +28,11 @@ def hello():
     template = jinja_env.get_template('hello_greeting.html')
     return template.render(name=first_name)
 
-time_form = """
-    <style>
-        .error {{ color: red; }}
-    </style>
-    <h1>Validate Time</h1>
-    <form method='POST'>
-        <label>Hours (24-hour format)
-            <input name="hours" type="text" value='{hours}' />
-        </label>
-        <p class="error">{hours_error}</p>
-        <label>Minutes
-            <input name="minutes" type="text" value='{minutes}' />
-        </label>
-        <p class="error">{minutes_error}</p>
-        <input type="submit" value="Validate" />
-    </form>
-    """
-
 @app.route('/validate-time')
 #displays the hours and minutes on screen
 def display_time_form():
-    return time_form.format(hours='', hours_error='', minutes='', minutes_error='')
+    tempate = jinja_env.get_template('time_form.html')
+    return tempate.render()
 
 #checks to see if the hour/minutes are integers
 def is_integer(num):

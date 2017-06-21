@@ -21,8 +21,8 @@ def index():
 @app.route("/hello", methods=['POST'])
 def hello():
     first_name = request.form['first_name']
-    return '<h1>Hello, ' + cgi.escape(first_name) + '</h1>'
-
+    template = jinja_env.get_template('hello_greeting.html')
+    return template.render(name=first_name)
 
 time_form = """
     <style>

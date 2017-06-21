@@ -75,7 +75,8 @@ def validate_time():
         time = str(hours) + ':' + str(minutes)
         return redirect('/valid-time?time={0}'.format(time))
     else:
-        return time_form.format(hours_error=hours_error, minutes_error=minutes_error, hours=hours, minutes=minutes)
+        template = jinja_env.get_template('time_form.html')
+        return template.render(hours_error=hours_error, minutes_error=minutes_error, hours=hours, minutes=minutes)
 
 @app.route('/valid-time')
 def valid_time():

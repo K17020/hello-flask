@@ -1,40 +1,33 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect,render_template
 import cgi
 import os
-import jinja2
 
-# this is looking for a folder named tempates in the given path
-template_dir = os.path.join(os.path.dirname(__file__),
-    'templates')
 
-# this loads files from the dir templates into a jinja2 template
-#autoescape provides protection from unwanted html insert
-jinja_env = jinja2.Environment(
-    loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
-
+"""
+Below is the code you need if you decied you want to import the jinja2 module, the modules specifies a specific location that which you 
+would like to point template files. The jinja_env creates the enviroment for jinja to fuction in. The autoescape produces some protection from
+code be inserted into your form
+template_dir = os.path.join(os.path.dirname(__file__),'templates')
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
+"""
 app = Flask(__name__)
 app.config['DEBUG'] = True
-
-
-# this directs jinja templates to the html files
+# flask renders template in from the templates folder it also set autoescape to True.
 @app.route("/")
 def index():
-    template = jinja_env.get_template('hello_form.html')
-    return template.render()
+    return render_template('hello_form.html')
 
 @app.route("/hello", methods=['POST'])
 def hello():
     first_name = request.form['first_name']
-    template = jinja_env.get_template('hello_greeting.html')
-    return template.render(name=first_name)
+    return render_template('hello_greeting.html', name=first_name)
 
 @app.route('/validate-time')
-#displays the hours and minutes on screen
+# displays the hours and minutes on screen
 def display_time_form():
-    tempate = jinja_env.get_template('time_form.html')
-    return tempate.render()
+    return render_template('time_form.html')
 
-#checks to see if the hour/minutes are integers
+# checks to see if the hour/minutes are integers
 def is_integer(num):
     try:
         int(num)
@@ -43,7 +36,7 @@ def is_integer(num):
         return False
 
 @app.route('/validate-time', methods=['POST'])
-#chcecks to see if the time entered are within range 
+# chcecks to see if the time entered are within range 
 
 def validate_time():
 
@@ -75,8 +68,7 @@ def validate_time():
         time = str(hours) + ':' + str(minutes)
         return redirect('/valid-time?time={0}'.format(time))
     else:
-        template = jinja_env.get_template('time_form.html')
-        return template.render(hours_error=hours_error, minutes_error=minutes_error, hours=hours, minutes=minutes)
+        return render_template('time_form.html',hours_error=hours_error, minutes_error=minutes_error, hours=hours, minutes=minutes)
 
 @app.route('/valid-time')
 def valid_time():

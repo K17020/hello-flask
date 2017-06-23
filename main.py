@@ -83,8 +83,7 @@ def todos():
     if request.method == 'POST':
         task = request.form['task']
         tasks.append(task)
-
-    template = jinja_env.get_template('todos.html')
-    return template.render(title="TODOs", tasks=tasks)
+        
+    return render_template('todos.html',title="TODOs", tasks=tasks)
 
 app.run()
